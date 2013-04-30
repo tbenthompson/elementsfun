@@ -1,3 +1,6 @@
-incorporate gmsh for mesh generation
-add sem code with flexibility for the problem formulation
--- SEMpervivum
+look a bit at the downloaded code
+start working on some SEM code in 2d that can handle finite ruptures
+
+way later: incorporate gmsh support for mesh generation?
+
+read the geubelle and rice papers and lapusta papers on the spectral boundary integral equation method

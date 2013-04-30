@@ -1,0 +1,4 @@
+perfectly matched layer == for use when need to absorb waves propagating towards a boundary in a finite computational domain
+spectral-element-method == just like a normal FEM method, but with a somewhat complex element computation technique using gauss-lobatto-legendre points as the computation points for quadrature
+then, on top of this, we can implement some sort of simple transformation to represent each element so that they can be curved hexahedra in 3d, or non-unit line,square,cube in general
+
