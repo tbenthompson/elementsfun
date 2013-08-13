@@ -26,3 +26,14 @@ class Triangle(object):
     
     def getCentroid(self):
         return sum(self.getCornerCoords())/3.
+
+    #this if n1 and n2 are not nodes of this triangle, this function returns node1, careful!
+    #if this function returns "None", then two of the nodes in the triangle are the same, this is also a big problem!
+    def getThirdNode(self, n1, n2):
+        if self.nodes[0] is not n1 and self.nodes[0] is not n2:
+            return self.nodes[0]
+        if self.nodes[1] is not n1 and self.nodes[1] is not n2:
+            return self.nodes[1]
+        if self.nodes[2] is not n1 and self.nodes[2] is not n2:
+            return self.nodes[2]
+        return None

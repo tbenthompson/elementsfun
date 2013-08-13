@@ -2,7 +2,7 @@ import unittest
 from math import *
 from problem import Problem
 from mesh_gen import generateRectangularMesh
-from view_solution import view_rectangular_grid_solution
+from view_solution import view_rectangular_grid_solution, get_grid, show_plot
 import numpy as np
 #   I TOOK THIS EXAMPLE FROM THE GOCKENBACH BOOK, HERE IS THE ORIGINAL ACCOMPANYING TEXT
 #   This script demonstrates the use of the Fem code to
@@ -50,12 +50,14 @@ class TestKnownProblem(unittest.TestCase):
         [nodes, boundary_nodes, tris] = generateRectangularMesh((ewidth, eheight), ll, (xwidth/(ewidth-1),ywidth/(eheight-1)))
         p = Problem(nodes, boundary_nodes, tris)
         # U, g = p.solve(lambda x,y: cos(x*y*pi) - 0.5, lambda x,y: 1, lambda x,y: 0, ux)
-        U, g = p.solve(f, k, u, ux)
-        print U
-        view_rectangular_grid_solution((ewidth, eheight), p, U, g)
-        
+        Uest, g = p.solve(f, k, u, ux)
+        Utrue = [u(n.pos[0],n.pos[1]) for n in p.free_nodes] 
+        # view_rectangular_grid_solution((ewidth, eheight), p, Uest, g)
+        # view_rectangular_grid_solution((ewidth, eheight), p, Utrue, g)
+        error = np.sqrt(np.sum((Utrue - Uest) ** 2))
+        print error
+        self.assertTrue(error < 0.5)
 
-#        
 if __name__ == "__main__":
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestKnownProblem))

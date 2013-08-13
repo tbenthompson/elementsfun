@@ -50,6 +50,18 @@ class TestPyFEMur(unittest.TestCase):
         bg = Problem._calcBasisGradient(coords)
         self.assertTrue((bg == np.array([[512.,-256.,-256.],[-256.,256.,0.], [-256.,0.,256.]])).all())
     
+    def testEdgeNormal(self):
+        a = Node((0,0),(0,0))
+        b = Node((1,0),(0,0))
+        c = Node((0,1),(0,0))
+        t = Triangle(a, b, c)
+        xaxisedge = t.edges[0]
+        reversedxaxisedge = Edge(xaxisedge.nodes[1], xaxisedge.nodes[0])
+        diagonaledge = t.edges[1]
+        yaxisedge = t.edges[2]
+        self.assertTrue((xaxisedge.getNormal(t) == (0, -1)).all())
+        self.assertTrue((reversedxaxisedge.getNormal(t) == (0, -1)).all())
+
     def testTriangleArea(self):
         t = Triangle(Node((1,1),(0,0)), Node((0,0),(0,0)), Node((1,0),(0,0)))
         self.assertEqual(t.getArea(), 0.5)
@@ -60,7 +72,7 @@ class TestPyFEMur(unittest.TestCase):
         [nodes, boundary_nodes, tris] = generateRectangularMesh((width, height), (0,0), (1,1))
         p = Problem(nodes, boundary_nodes, tris)
         stiffness = p.getStiffnessMatrix(lambda x,y: x*y).toarray()
-        self.assertEqual(stiffness[0,0], 34)
+        self.assertEqual(stiffness[0,0], 34.0/9.0)
     
     def testProblemStiffness2(self):
         width = 4
@@ -159,6 +171,16 @@ class TestPyFEMur(unittest.TestCase):
         [nodes, boundary_nodes, tris] = generateRectangularMesh((width, height), (5, 0), (10, 0))
         self.assertEqual(nodes[0].pos, (5, 0))
         self.assertEqual(nodes[1].pos, (15, 0))
+
+    def testTriangleThirdNode(self):
+        n1 = Node((0,0),1)
+        n2 = Node((1,1),2)
+        n3 = Node((0,1),3)
+        t = Triangle(n1, n2, n3)
+        self.assertEqual(n1, t.getThirdNode(n2,n3))
+        self.assertEqual(n2, t.getThirdNode(n1,n3))
+        self.assertEqual(n3, t.getThirdNode(n1,n2))
+
         
 if __name__ == "__main__":
     suite = unittest.TestSuite()

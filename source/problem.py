@@ -1,5 +1,4 @@
 from node import Node
-from dirichletnode import DirichletNode
 import numpy as np
 from scipy import sparse
 import scipy.sparse.linalg as sparselinalg
@@ -29,6 +28,7 @@ class Problem(object):
     
     def solve(self, f, k, u, du):
         g = self.getDirichletData(u)
+        # h = self.getNeumannData(u) 
         K = self.getStiffnessMatrix(k)
         f = self.getLoad(f, k, g)
         return (sparselinalg.cg(K, f)[0], g)
@@ -39,8 +39,10 @@ class Problem(object):
     @staticmethod
     def _calcBasisGradient(coords):
         coords_matrix = np.hstack([np.ones((3,1)),coords])    
+	# print coords_matrix
         C = np.linalg.inv(coords_matrix)
         #TODO: I don't understand this line and why it calculates the gradient of the basis
+	# print C
         basis_gradient = C[1:3,:].T.dot(C[1:3,:])
         return basis_gradient
     
@@ -96,9 +98,14 @@ class Problem(object):
                 basis_gradient = self._calcBasisGradient(coords).dot(w)
                 intensity = triarea * k_function(centroid[0], centroid[1]) * basis_gradient
                 for i in range(0,3):
-                    if t.nodes[i].isDirichlet():
+                    if t.nodes[i].isBoundary():
                         continue
                     f[t.nodes[i].free_node_index] -= intensity[i]
             # if neumann.any():
+            #     intensity = triarea * k_function(centroid[0], centroid[1]) * h
+            #     for i in range(0,3):
+		    # if t.nodes[i].isBoundary():
+            #             continue
+            #         f[t.nodes[i].free_node_index] -= intensity
                   
         return f

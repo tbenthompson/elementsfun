@@ -18,3 +18,8 @@ class Node(object):
     
     def evaluateWith(self, function):
         return function(self.pos[0], self.pos[1])
+
+    def getVectorTo(self, othernode):
+        deltax = othernode.pos[0] - self.pos[0]
+        deltay = othernode.pos[1] - self.pos[1]
+        return [deltax, deltay]
