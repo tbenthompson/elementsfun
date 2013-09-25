@@ -1,4 +1,4 @@
-from math import floor
+from math import floor,sqrt
 import unittest
 from test_known_problem import TestKnownProblem
 from scipy import sparse
@@ -61,6 +61,8 @@ class TestPyFEMur(unittest.TestCase):
         yaxisedge = t.edges[2]
         self.assertTrue((xaxisedge.getNormal(t) == (0, -1)).all())
         self.assertTrue((reversedxaxisedge.getNormal(t) == (0, -1)).all())
+        self.assertTrue((yaxisedge.getNormal(t) == (-1, 0)).all())
+        self.assertTrue((diagonaledge.getNormal(t) == (1/sqrt(2), 1/sqrt(2))).all())
 
     def testTriangleArea(self):
         t = Triangle(Node((1,1),(0,0)), Node((0,0),(0,0)), Node((1,0),(0,0)))
